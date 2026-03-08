@@ -27,6 +27,7 @@ setup(
             f"draw_circle = {package_name}.draw_circle:main",
             f"pose_subs = {package_name}.pose_subs:main",
             f"turtle_controller = {package_name}.turtle_controller:main",
+            f"test_drive = {package_name}.test_drive:main",
         ],
     },
 )

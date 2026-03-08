@@ -13,7 +13,7 @@ class PoseSubsNode(Node):
         )
 
     def pose_callback(self, msg: Pose):
-        self.get_logger().info(f"{msg.x} + {msg.y}")
+        self.get_logger().info(f"X: {msg.x:.1f}, Y:{msg.y:.1f}, Z: {msg.theta}")
 
 
 def main(args=None):
