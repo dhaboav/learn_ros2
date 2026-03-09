@@ -13,45 +13,39 @@ class TestDrive(Node):
     def __init__(self):
         super().__init__("test_drive")
         self.state = "off"
-        self.data_x = 0.0
-        self.data_y = 0.0
 
         self.pubs_ = self.create_publisher(Twist, "/turtle1/cmd_vel", 10)
         self.subs_ = self.create_subscription(
-            Pose, "/turtle1/pose", self.pose_callback, 10
+            Pose, "/turtle1/pose", self.movement_callback, 10
         )
-        self.timer_ = self.create_timer(0.1, self.movement_callback)
         self.get_logger().info("Test Drive has started!")
 
-    def pose_callback(self, pose: Pose):
-        self.data_x, self.data_y = pose.x, pose.y
-
-    def movement_callback(self):
+    def movement_callback(self, pose: Pose):
         msg = Twist()
 
         if self.state == "off":
             msg.linear.x = 1.0
 
-            if self.data_x > 9.5:
+            if pose.x > 9.5:
                 self.state = "b"
 
         elif self.state == "b":
             msg.linear.x = 1.0
 
-            if self.data_x > 9.0:
+            if pose.x > 9.0:
                 msg.angular.z = 1.0
 
-            elif self.data_x < 2.5:
+            elif pose.x < 2.5:
                 self.state = "c"
 
         elif self.state == "c":
             msg.linear.x = 1.0
 
-            if self.data_x < 3.5:
+            if pose.x < 3.5:
                 msg.angular.z = -1.0
                 msg.linear.x = 3.0
 
-            elif self.data_x >= 5.5:
+            elif pose.x >= 5.5:
                 msg.linear.x = 0.0
                 self.state = "stop"
 
