@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from functools import partial
+from math import atan2, sqrt
 
 import rclpy
 from geometry_msgs.msg import Twist
@@ -13,49 +14,68 @@ class TestDrive(Node):
     def __init__(self):
         super().__init__("test_drive")
         self.state = "off"
-
         self.pubs_ = self.create_publisher(Twist, "/turtle1/cmd_vel", 10)
         self.subs_ = self.create_subscription(
             Pose, "/turtle1/pose", self.movement_callback, 10
         )
         self.get_logger().info("Test Drive has started!")
 
+    def distance_calc(
+        self, goal_x: float, goal_y: float, current_x: float, current_y: float
+    ) -> float:
+        distance = sqrt((goal_x - current_x) ** 2 + (goal_y - current_y) ** 2)
+        return distance
+
+    def angle_calc(
+        self, goal_x: float, goal_y: float, current_x: float, current_y: float
+    ) -> float:
+        angle = atan2(goal_y - current_y, goal_x - current_x)
+        return angle
+
     def movement_callback(self, pose: Pose):
         msg = Twist()
+        point_x, point_y = 0, 0
+        point_ax, point_ay = 2.5, 3
+        point_bx, point_by = 7.5, 3
+        point_cx, point_cy = 5.5, 5.5
+
+        ANGLE_TOLERANCE = 0.01
+        DISTANCE_TOLERANCE = 0.1
 
         if self.state == "off":
-            msg.linear.x = 1.0
-
-            if pose.x > 9.5:
-                self.state = "b"
+            point_x, point_y = point_ax, point_ay
 
         elif self.state == "b":
-            msg.linear.x = 1.0
+            point_x, point_y = point_bx, point_by
 
-            if pose.x > 9.0:
-                msg.angular.z = 1.0
+        else:
+            point_x, point_y = point_cx, point_cy
 
-            elif pose.x < 2.5:
-                self.state = "c"
+        distance = self.distance_calc(point_x, point_y, pose.x, pose.y)
+        angle = self.angle_calc(point_x, point_y, pose.x, pose.y)
+        angle_error = angle - pose.theta
 
-        elif self.state == "c":
-            msg.linear.x = 1.0
+        if abs(angle_error) > ANGLE_TOLERANCE:
+            msg.angular.z = angle_error
+        else:
+            if distance > DISTANCE_TOLERANCE:
+                msg.linear.x = distance * 1.5
+            else:
+                if self.state == "off":
+                    self.state = "b"
 
-            if pose.x < 3.5:
-                msg.angular.z = -1.0
-                msg.linear.x = 3.0
-
-            elif pose.x >= 5.5:
-                msg.linear.x = 0.0
-                self.state = "stop"
-
-        elif self.state == "stop":
-            self.call_kill_service("turtle1")
+                elif self.state == "b":
+                    self.state = "c"
+                    
+                else:
+                    self.get_logger().info("Done")
+                    self.call_kill_service("turtle1")
+                    quit()
 
         self.pubs_.publish(msg)
 
         self.get_logger().info(
-            f"cons: {self.state}, cmd.x: {msg.linear.x}, ang.z {msg.angular.z}"
+            f"state: {self.state}, cmd.x: {distance}, ang.z {angle_error}"
         )
 
     def call_kill_service(self, turtle_name: str):
