@@ -11,22 +11,13 @@ def generate_launch_description():
         name="turtle_node",
     )
 
-    math_turtle_control_node = Node(
+    turtle_action_move_server_node = Node(
         package="turtlesim_controller",
-        executable="test_drive",
-        name="controller_node",
+        executable="turtle_act_move_server",
+        name="action_server_node",
     )
 
     ld.add_action(turltesim_node)
-    ld.add_action(math_turtle_control_node)
+    ld.add_action(turtle_action_move_server_node)
 
     return ld
-
-    # listener_node = Node(
-    #     package="demo_nodes_py",
-    #     executable="listener",
-    #     name="my_listener",
-    #     remappings=[
-    #         ("chatter", "my_chatter") # Topics remappings
-    #     ]
-    # )

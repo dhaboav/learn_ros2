@@ -9,7 +9,7 @@ from turtlesim.msg import Pose
 from turtlesim.srv import Kill
 
 
-class TestDrive(Node):
+class TurtleMathNode(Node):
 
     def __init__(self):
         super().__init__("test_drive")
@@ -98,9 +98,5 @@ class TestDrive(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = TestDrive()
+    node = TurtleMathNode()
     rclpy.spin(node)
-
-
-if __name__ == "__main__":
-    main()

@@ -8,7 +8,7 @@ from turtlesim.msg import Pose
 from turtlesim.srv import SetPen
 
 
-class TurtleControllerNode(Node):
+class TurtleServiceNode(Node):
     def __init__(self):
         super().__init__("turtle_controller")
         self.previous_x_ = 0
@@ -64,6 +64,6 @@ class TurtleControllerNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = TurtleControllerNode()
+    node = TurtleServiceNode()
     rclpy.spin(node)
     rclpy.shutdown()

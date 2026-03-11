@@ -23,13 +23,10 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            f"test_node = {package_name}.my_first_node:main",
-            f"draw_circle = {package_name}.draw_circle:main",
-            f"pose_subs = {package_name}.pose_subs:main",
-            f"turtle_controller = {package_name}.turtle_controller:main",
-            f"test_drive = {package_name}.test_drive:main",
-            f"action_server = {package_name}.count_until_server:main",
-            f"action_client = {package_name}.count_until_client:main",
+            f"turtle_act_move_server = {package_name}.turtle_action_move_server:main",
+            f"turtle_act_move_client = {package_name}.turtle_action_move_client:main",
+            f"turtle_service = {package_name}.turtle_service:main",
+            f"turtle_math = {package_name}.turtle_math:main",
         ],
     },
 )
