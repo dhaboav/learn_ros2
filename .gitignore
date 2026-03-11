@@ -34,7 +34,3 @@ pip-delete-this-directory.txt
 # Manifest files (usually generated automatically)
 *.manifest
 *.spec
-
-# Package related
-/resource
-/test

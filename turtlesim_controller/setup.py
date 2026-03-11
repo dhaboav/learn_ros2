@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = "my_robot_controller"
+package_name = "turtlesim_controller"
 
 setup(
     name=package_name,
@@ -12,8 +12,8 @@ setup(
     ],
     install_requires=["setuptools"],
     zip_safe=True,
-    maintainer="linux",
-    maintainer_email="linux@todo.todo",
+    maintainer="dhaboav",
+    maintainer_email="100108392+dhaboav@users.noreply.github.com",
     description="TODO: Package description",
     license="TODO: License declaration",
     extras_require={
