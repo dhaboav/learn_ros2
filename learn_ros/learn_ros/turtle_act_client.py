@@ -10,9 +10,9 @@ from learn_ros_interfaces.action import MoveToXY
 
 class TurtleActClientNode(Node):
     def __init__(self):
-        super().__init__("turtle_action_move_client")
+        super().__init__("turtle_act_client")
         self._client = ActionClient(self, MoveToXY, "move_to_xy")
-        self.get_logger().info("Action client has been started")
+        self.get_logger().info("Turtle act client has been started")
 
     def send_goal(self, x: float, y: float):
         # Wait for the server

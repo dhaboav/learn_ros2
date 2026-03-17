@@ -14,7 +14,7 @@ def generate_launch_description():
 
     turtle_act_server_node = Node(
         package="learn_ros",
-        executable="turtle_server",
+        executable="turtle_act_server",
     )
 
     ld.add_action(turltesim_node)

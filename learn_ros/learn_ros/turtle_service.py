@@ -10,13 +10,13 @@ from turtlesim.srv import SetPen
 
 class TurtleServiceNode(Node):
     def __init__(self):
-        super().__init__("turtle_controller")
+        super().__init__("turtle_service")
         self.previous_x_ = 0
         self.cmd_vel_pub_ = self.create_publisher(Twist, "/turtle1/cmd_vel", 10)
         self.pose_subs_ = self.create_subscription(
             Pose, "/turtle1/pose", self.pose_callback, 10
         )
-        self.get_logger().info("Turtle controller has been started.")
+        self.get_logger().info("Turtle service has been started.")
 
     def pose_callback(self, pose: Pose):
         cmd = Twist()

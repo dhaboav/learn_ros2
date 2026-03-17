@@ -27,8 +27,8 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            f"turtle_server = {package_name}.turtle_act_server:main",
-            f"turtle_client = {package_name}.turtle_act_client:main",
+            f"turtle_act_server = {package_name}.turtle_act_server:main",
+            f"turtle_act_client = {package_name}.turtle_act_client:main",
             f"turtle_math = {package_name}.turtle_math:main",
             f"turtle_service = {package_name}.turtle_service:main",
         ],

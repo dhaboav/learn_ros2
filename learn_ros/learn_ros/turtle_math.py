@@ -12,13 +12,13 @@ from turtlesim.srv import Kill
 class TurtleMathNode(Node):
 
     def __init__(self):
-        super().__init__("test_drive")
+        super().__init__("turtle_math")
         self.state = "off"
         self.pubs_ = self.create_publisher(Twist, "/turtle1/cmd_vel", 10)
         self.subs_ = self.create_subscription(
             Pose, "/turtle1/pose", self.movement_callback, 10
         )
-        self.get_logger().info("Test Drive has started!")
+        self.get_logger().info("Turtle math has started!")
 
     def distance_calc(
         self, goal_x: float, goal_y: float, current_x: float, current_y: float

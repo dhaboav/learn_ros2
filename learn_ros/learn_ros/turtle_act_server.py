@@ -14,7 +14,7 @@ from learn_ros_interfaces.action import MoveToXY
 
 class TurtleActServer(Node):
     def __init__(self):
-        super().__init__("turtle_action_move_server")
+        super().__init__("turtle_act_server")
         self._server = ActionServer(
             self,
             MoveToXY,
@@ -32,7 +32,7 @@ class TurtleActServer(Node):
 
         self._turtle_pose = Pose()
         self._status = "ongoing"
-        self.get_logger().info("turle action move server has been started")
+        self.get_logger().info("Turle act server has been started")
 
     # Subs
     def pose_callback(self, pose: Pose):
