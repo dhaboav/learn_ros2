@@ -64,7 +64,7 @@
             </geometry>
             <origin xyz="0 0 0.1" rpy="0 0 0" />
         </collision>
-        <xacro:solid_box_inertia mass="5" x="0.6" y="0.4" z="0.2"/>
+        <xacro:solid_box_inertia mass="5" x="0.6" y="0.4" z="0.2" />
     </link>
 
     <link name="lidar_link">
@@ -75,6 +75,12 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <material name="white" />
         </visual>
+        <collision>
+            <geometry>
+                <box size="${radius*2} ${radius*2} ${length}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
     </link>
 
     <link name="caster_wheel_link">
