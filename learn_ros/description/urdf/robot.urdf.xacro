@@ -6,7 +6,8 @@
     <xacro:include filename="inertials.urdf.xacro" />
 
     <!-- Xacro properties -->
-    <xacro:property name="radius" value="0.1" />
+    <xacro:property name="radius_wheels" value="0.1" />
+    <xacro:property name="radius_caster_wheel" value="0.05" />
     <xacro:property name="length" value="0.05" />
 
     <!-- Xacro links -->
@@ -14,7 +15,7 @@
         <link name="${prefix}_wheel_link">
             <visual>
                 <geometry>
-                    <cylinder radius="${radius}" length="${length}" />
+                    <cylinder radius="${radius_wheels}" length="${length}" />
                 </geometry>
                 <origin xyz="0 0 0" rpy="1.57 0 0" />
                 <material name="grey" />
@@ -22,12 +23,12 @@
 
             <collision>
                 <geometry>
-                    <cylinder radius="${radius}" length="${length}" />
+                    <cylinder radius="${radius_wheels}" length="${length}" />
                 </geometry>
                 <origin xyz="0 0 0" rpy="1.57 0 0" />
             </collision>
             <xacro:solid_cylinder_inertia 
-                mass="0.5" radius="${radius}" length="${length}" 
+                mass="0.5" radius="${radius_wheels}" length="${length}" 
                 xyz="0 0 0" rpy="1.57 0 0" />
         </link>
     </xacro:macro>
@@ -74,14 +75,14 @@
     <link name="lidar_link">
         <visual>
             <geometry>
-                <cylinder radius="${radius}" length="${length}" />
+                <cylinder radius="${radius_wheels}" length="${length}" />
             </geometry>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <material name="white" />
         </visual>
         <collision>
             <geometry>
-                <box size="${radius*2} ${radius*2} ${length}" />
+                <box size="${radius_wheels*2} ${radius_wheels*2} ${length}" />
             </geometry>
             <origin xyz="0 0 0" rpy="0 0 0" />
         </collision>
@@ -90,28 +91,54 @@
     <link name="caster_wheel_link">
         <visual>
             <geometry>
-                <sphere radius="${radius}" />
+                <sphere radius="${radius_caster_wheel}" />
             </geometry>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <material name="grey" />
         </visual>
         <collision>
             <geometry>
-                <sphere radius="${radius}" />
+                <sphere radius="${radius_caster_wheel}" />
             </geometry>
             <origin xyz="0 0 0" rpy="0 0 0" />
         </collision>
-        <xacro:solid_sphere_inertia mass="0.2" radius="0.1"/>
+        <xacro:solid_sphere_inertia mass="0.2" radius="${radius_caster_wheel}"/>
     </link>
     <xacro:wheels prefix="left" />
     <xacro:wheels prefix="right" />
 
     <!-- Joints Section-->
-    <xacro:fixed_joint prefix="base" parent="base_link" child="main_body_link" xyz="0 0 0.1" rpy="0 0 0"/>
-    <xacro:fixed_joint prefix="base_lidar" parent="main_body_link" child="lidar_link" xyz="0 0 0.225" rpy="0 0 0"/>
-    <xacro:fixed_joint prefix="base_caster_wheel" parent="main_body_link" child="caster_wheel_link" xyz="0.2 0 -0.05" rpy="0 0 0" />
-    <xacro:continuous_joint prefix="base_left_wheel" parent="main_body_link" child="left_wheel_link" xyz="-0.15 0.225 0" rpy="0 0 0" axis="0 1 0"/>
-    <xacro:continuous_joint prefix="base_right_wheel" parent="main_body_link" child="right_wheel_link" xyz="-0.15 -0.225 0" rpy="0 0 0" axis="0 1 0"/>
+    <xacro:fixed_joint 
+        prefix="base" 
+        parent="base_link" 
+        child="main_body_link" 
+        xyz="0 0 0.1" rpy="0 0 0"/>
+
+    <xacro:fixed_joint 
+        prefix="base_lidar" 
+        parent="main_body_link" 
+        child="lidar_link" 
+        xyz="0 0 0.225" rpy="0 0 0"/>
+
+    <xacro:fixed_joint 
+        prefix="base_caster_wheel" 
+        parent="main_body_link" 
+        child="caster_wheel_link" 
+        xyz="0.2 0 -0.025" rpy="0 0 0" />
+
+    <xacro:continuous_joint 
+        prefix="base_left_wheel" 
+        parent="main_body_link" 
+        child="left_wheel_link" 
+        xyz="-0.15 0.225 0" rpy="0 0 0" 
+        axis="0 1 0"/>
+
+    <xacro:continuous_joint 
+        prefix="base_right_wheel" 
+        parent="main_body_link" 
+        child="right_wheel_link" 
+        xyz="-0.15 -0.225 0" rpy="0 0 0" 
+        axis="0 1 0"/>
 
     <!-- Gazebo Section -->
     <gazebo>
@@ -123,7 +150,7 @@
             <right_joint>base_right_wheel_joint</right_joint>
 
             <wheel_separation>0.45</wheel_separation>
-            <wheel_radius>0.1</wheel_radius>
+            <wheel_radius>${radius_wheels}</wheel_radius>
 
             <topic>cmd_vel</topic>
 

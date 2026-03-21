@@ -1,39 +1,52 @@
 import os
 
-from launch import LaunchDescription
-from launch.actions import ExecuteProcess
-from launch.substitutions import Command
+import xacro
+from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
+
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 
 def generate_launch_description():
+    
+    # Package Directories
+    pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
+    package_name = get_package_share_directory("learn_ros")
 
-    package_name = "learn_ros"
+    # Xacro Process
+    robot_desc_file = os.path.join(package_name, "description", "urdf", "robot.urdf.xacro")
+    
+    robot_desc_config = xacro.process_file(robot_desc_file).toxml()
 
-    pkg_share = FindPackageShare(package_name).find(package_name)
-    xacro_file = os.path.join(pkg_share, "description", "urdf", "robot.urdf.xacro")
 
-    # Convert xacro → robot_description
-    robot_description = Command(["xacro ", xacro_file])
-
-    # Start Gazebo Harmonic
-    gazebo = ExecuteProcess(cmd=["gz", "sim", "-r", "empty.sdf"], output="screen")
-
-    ld = LaunchDescription()
-
-    spawn_entity = Node(
-        package="ros_gz_sim",
-        executable="create",
-        output="screen",
-        arguments=["-name", "my_robot", "-topic", "robot_description"],
-    )
-
-    # Publish robot_description
     robot_state_publisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        parameters=[{"robot_description": robot_description}],
+        name="robot_state_publisher",
+        output="screen",
+        parameters=[{"robot_description":robot_desc_config}],
+    )
+
+    gazebo = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(pkg_ros_gz_sim, "launch", "gz_sim.launch.py")),
+        launch_arguments={
+            "gz_args": "-r -v 4 empty.sdf"
+        }.items()
+    )
+
+    spawn = Node(
+        package="ros_gz_sim",
+        executable="create",
+        arguments=[
+            "-topic", "/robot_description",
+            "-name", "my_robot",
+            "-allow_renaming", "true",
+            "-x", "0.0",
+            "-y", "0.0",
+            "-z", "0.0",
+        ],
         output="screen",
     )
 
@@ -44,9 +57,11 @@ def generate_launch_description():
         output="screen",
     )
 
-    ld.add_action(gazebo)
-    ld.add_action(robot_state_publisher)
-    ld.add_action(spawn_entity)
-    ld.add_action(bridge_cmd_vel)
-
-    return ld
+    return LaunchDescription(
+        [
+            gazebo,
+            spawn,
+            bridge_cmd_vel, 
+            robot_state_publisher,
+        ]
+    )
