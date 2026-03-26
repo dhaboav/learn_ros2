@@ -1,33 +1,28 @@
 import os
 
-import xacro
-from ament_index_python.packages import get_package_share_directory
-from launch_ros.actions import Node
-
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import Command
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
 
     # Package Directories
-    pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
-    package_name = get_package_share_directory("learn_ros")
-
-    # Xacro Process
-    robot_desc_file = os.path.join(
-        package_name, "description", "urdf", "robot.urdf.xacro"
+    pkg_ros_gz_sim = FindPackageShare(package="ros_gz_sim").find("ros_gz_sim")
+    package_name = FindPackageShare(package="learn_ros_description").find(
+        "learn_ros_description"
     )
-
-    robot_desc_config = xacro.process_file(robot_desc_file).toxml()
+    model_path = os.path.join(package_name, "urdf/robot.urdf.xacro")
 
     robot_state_publisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         name="robot_state_publisher",
         output="screen",
-        parameters=[{"robot_description": robot_desc_config}],
+        parameters=[{"robot_description": Command(["xacro ", model_path])}],
     )
 
     gazebo = IncludeLaunchDescription(
@@ -63,7 +58,7 @@ def generate_launch_description():
         arguments=[
             "/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
             "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
-            "/camera@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
         ],
         output="screen",
     )

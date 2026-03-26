@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:property name="lidar_radius" value="0.1" />
+  <xacro:property name="lidar_length" value="0.05" />
+  
+  <link name="lidar_link">
+    <visual>
+      <geometry>
+        <cylinder radius="${lidar_radius}" length="${lidar_length}" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <material name="white" />
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="${lidar_radius}" length="${lidar_length}" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </collision>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="lidar_link" />
+    <origin xyz="0 0 0.225" rpy="0 0 0" />
+  </joint>
+
+  <gazebo reference="lidar_link">
+    <sensor name="gpu_lidar" type="gpu_lidar">
+      <always_on>1</always_on>
+      <update_rate>2</update_rate>
+      <visualize>1</visualize>
+      <topic>lidar</topic>
+      <pose relative_to="lidar_link">0 0 0 0 0 0</pose>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14</min_angle>
+            <max_angle>3.14</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.01</min>
+          <max>12.0</max>
+          <resolution>0.005</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.001</stddev>
+        </noise>     
+      </lidar>
+    </sensor>
+  </gazebo>
+</robot>

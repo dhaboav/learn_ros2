@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find learn_ros_description)/urdf/commons.xacro" />
+  <xacro:include filename="$(find learn_ros_description)/urdf/sensors/lidar.xacro" />
+  <xacro:include filename="$(find learn_ros_description)/urdf/sensors/camera.xacro" />
+  <xacro:include filename="$(find learn_ros_description)/urdf/body/wheels.xacro" />
+  <xacro:include filename="$(find learn_ros_description)/urdf/body/caster_wheel.xacro" />
+
+  <link name="world_ground" />
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.6 0.4 0.2" />
+      </geometry>
+      <origin xyz="0 0 0.1" rpy="0 0 0" />
+      <material name="green" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.6 0.4 0.2" />
+      </geometry>
+      <origin xyz="0 0 0.1" rpy="0 0 0" />
+    </collision>
+    <xacro:solid_box_inertia 
+      mass="5" x="0.6" y="0.4" z="0.2" 
+      xyz="0 0 0.1" rpy="0 0 0"/>
+  </link>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="world_ground" />
+    <child link="base_link" />
+    <origin xyz="0 0 0.1" rpy="0 0 0" />
+  </joint>
+
+  <gazebo>
+    <plugin
+      filename="gz-sim-diff-drive-system"
+      name="gz::sim::systems::DiffDrive">
+      <left_joint>base_left_wheel_joint</left_joint>
+      <right_joint>base_right_wheel_joint</right_joint>
+      <wheel_separation>0.45</wheel_separation>
+      <wheel_radius>${wheels_radius}</wheel_radius>
+      <topic>cmd_vel</topic>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+  </gazebo>
+</robot>
