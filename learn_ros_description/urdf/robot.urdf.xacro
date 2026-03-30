@@ -6,7 +6,14 @@
   <xacro:include filename="$(find learn_ros_description)/urdf/body/wheels.xacro" />
   <xacro:include filename="$(find learn_ros_description)/urdf/body/caster_wheel.xacro" />
 
-  <link name="world_ground" />
+  <link name="base_footprint"/>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </joint>
+
   <link name="base_link">
     <visual>
       <geometry>
@@ -26,34 +33,37 @@
       xyz="0 0 0.1" rpy="0 0 0"/>
   </link>
 
-  <joint name="base_joint" type="fixed">
-    <parent link="world_ground" />
-    <child link="base_link" />
-    <origin xyz="0 0 0.1" rpy="0 0 0" />
-  </joint>
-
   <gazebo>
     <plugin
       filename="gz-sim-diff-drive-system"
       name="gz::sim::systems::DiffDrive">
       <left_joint>left_wheel_joint</left_joint>
-      <right_joint>right_wheel_joint</right_joint>
+      <right_joint>right_wheel_joint</right_joint>   
+
       <wheel_separation>0.45</wheel_separation>
       <wheel_radius>${wheels_radius}</wheel_radius>
+      
       <topic>cmd_vel</topic>
+      <odom_topic>odom</odom_topic>
+      <tf_topic>/tf</tf_topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_footprint</child_frame_id>
     </plugin>
   </gazebo>
+  <gazebo>
+  <plugin
+    filename="gz-sim-joint-state-publisher-system"
+    name="gz::sim::systems::JointStatePublisher">
+    <topic>/model/my_robot/joint_state</topic>
+    <joint_name>left_wheel_joint</joint_name>
+    <joint_name>right_wheel_joint</joint_name>
+  </plugin>
+</gazebo>
   <gazebo>
     <plugin
       filename="gz-sim-sensors-system"
       name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
-    </plugin>
-  </gazebo>
-  <gazebo>
-    <plugin
-      filename="gz-sim-joint-state-publisher-system"
-      name="gz::sim::systems::JointStatePublisher">
     </plugin>
   </gazebo>
 </robot>

@@ -18,9 +18,8 @@ def generate_launch_description():
     # Configuration
     model_name = "my_robot"
     model_path = os.path.join(pkg_learn_ros_description, "urdf", "robot.urdf.xacro")
-    rviz_config_path = os.path.join(pkg_learn_ros_description, "rviz", "config.rviz")
+    rviz_config_path = os.path.join(pkg_learn_ros_description, "rviz", "gz.rviz")
 
-    # Node
     robot_state_publisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
@@ -34,30 +33,20 @@ def generate_launch_description():
         ],
     )
 
-    joint_state_publisher = Node(
-        package="joint_state_publisher",
-        executable="joint_state_publisher",
-        name="joint_state_publisher",
-        parameters=[
-            {
-                "use_sim_time": True,
-            }
-        ],
-    )
-
     rviz = Node(
         package="rviz2",
         executable="rviz2",
         name="rviz2",
         arguments=["-d", rviz_config_path],
         output="screen",
+        parameters=[{"use_sim_time": True}],
     )
 
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, "launch", "gz_sim.launch.py")
         ),
-        launch_arguments={"gz_args": "-r empty.sdf"}.items(),
+        launch_arguments={"gz_args": "-v 4 -r empty.sdf"}.items(),
     )
 
     spawn = Node(
@@ -67,15 +56,9 @@ def generate_launch_description():
             "-topic",
             "/robot_description",
             "-name",
-            "my_robot",
+            model_name,
             "-allow_renaming",
-            "true",
-            "-x",
-            "0.0",
-            "-y",
-            "0.0",
-            "-z",
-            "0.0",
+            "false",
         ],
         output="screen",
     )
@@ -84,16 +67,17 @@ def generate_launch_description():
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=[
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
             "/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
-            f"/world/empty/model/{model_name}/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model",
-            f"/model/{model_name}/pose@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+            "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
+            "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+            f"/model/{model_name}/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model",
             "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
-            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
         ],
         remappings=[
-            (f"/model/{model_name}/pose", "/tf"),
-            (f"/world/empty/model/{model_name}/joint_state", "/joint_states"),
+            (f"/model/{model_name}/joint_state", "/joint_states"),
         ],
+        parameters=[{"use_sim_time": True}],
         output="screen",
     )
 
@@ -103,7 +87,6 @@ def generate_launch_description():
             spawn,
             bridge,
             robot_state_publisher,
-            joint_state_publisher,
             rviz,
         ]
     )
