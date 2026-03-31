@@ -52,6 +52,7 @@
           <stddev>0.001</stddev>
         </noise>     
       </lidar>
+      <gz_frame_id>lidar_link</gz_frame_id>
     </sensor>
   </gazebo>
 </robot>

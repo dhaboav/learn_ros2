@@ -72,11 +72,20 @@ def generate_launch_description():
             "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
             f"/model/{model_name}/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model",
-            "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/lidar@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
         ],
         remappings=[
             (f"/model/{model_name}/joint_state", "/joint_states"),
         ],
+        parameters=[{"use_sim_time": True}],
+        output="screen",
+    )
+
+    ros_gz_image_bridge = Node(
+        package="ros_gz_image",
+        executable="image_bridge",
+        arguments=["/camera/image_raw"],
         parameters=[{"use_sim_time": True}],
         output="screen",
     )
@@ -86,6 +95,7 @@ def generate_launch_description():
             gz_sim,
             spawn,
             bridge,
+            ros_gz_image_bridge,
             robot_state_publisher,
             rviz,
         ]

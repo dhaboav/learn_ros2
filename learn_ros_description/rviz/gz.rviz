@@ -10,7 +10,7 @@ Panels:
         - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.5
-    Tree Height: 717
+    Tree Height: 421
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
@@ -20,7 +20,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: LaserScan
 Visualization Manager:
   Class: ""
   Displays:
@@ -74,6 +74,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        camera_optical_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         caster_wheel_link:
           Alpha: 1
           Show Axes: false
@@ -115,6 +119,8 @@ Visualization Manager:
           Value: false
         camera_link:
           Value: false
+        camera_optical_link:
+          Value: false
         caster_wheel_link:
           Value: false
         left_wheel_link:
@@ -135,7 +141,8 @@ Visualization Manager:
           base_footprint:
             base_link:
               camera_link:
-                {}
+                camera_optical_link:
+                  {}
               caster_wheel_link:
                 {}
               left_wheel_link:
@@ -146,6 +153,60 @@ Visualization Manager:
                 {}
       Update Interval: 0
       Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/LaserScan
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 0
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: LaserScan
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /lidar
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+    - Class: rviz_default_plugins/Camera
+      Enabled: true
+      Far Plane Distance: 100
+      Image Rendering: background and overlay
+      Name: Camera
+      Overlay Alpha: 0.5
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /camera/image_raw/compressed
+      Value: true
+      Visibility:
+        Grid: true
+        LaserScan: true
+        RobotModel: true
+        TF: true
+        Value: true
+      Zoom Factor: 1
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -161,33 +222,35 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.5160000324249268
+      Distance: 2.758687734603882
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 0.5869283676147461
+        Y: -0.16416054964065552
+        Z: 0.4112688899040222
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.4800004959106445
+      Pitch: 0.3047963082790375
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.42818021774292
+      Yaw: 3.131362199783325
     Saved: ~
 Window Geometry:
+  Camera:
+    collapsed: false
   Displays:
     collapsed: false
-  Height: 1011
+  Height: 914
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000003000000000000026f00000353fc0200000001fb000000100044006900730070006c006100790073010000003f00000353000000cc00ffffff000000010000010000000353fc0200000001fb0000000a00560069006500770073000000003f00000353000000a900ffffff00000003000007800000003cfc0100000001fb0000000800540069006d00650100000000000007800000026f00ffffff0000050b0000035300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000003000000000000026f000002f2fc0200000002fb000000100044006900730070006c006100790073010000003f0000022b000000cc00fffffffb0000000c00430061006d0065007200610100000270000000c10000001700ffffff000000010000010000000353fc0200000001fb0000000a00560069006500770073000000003f00000353000000a900ffffff00000003000007800000003cfc0100000001fb0000000800540069006d00650100000000000007800000026f00ffffff0000050b000002f200000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Time:
     collapsed: false
   Views:
