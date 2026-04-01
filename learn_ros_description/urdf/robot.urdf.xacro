@@ -2,7 +2,7 @@
 <robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:include filename="$(find learn_ros_description)/urdf/commons.xacro" />
   <xacro:include filename="$(find learn_ros_description)/urdf/sensors/lidar.xacro" />
-  <xacro:include filename="$(find learn_ros_description)/urdf/sensors/camera.xacro" />
+  <!-- <xacro:include filename="$(find learn_ros_description)/urdf/sensors/camera.xacro" /> -->
   <xacro:include filename="$(find learn_ros_description)/urdf/body/wheels.xacro" />
   <xacro:include filename="$(find learn_ros_description)/urdf/body/caster_wheel.xacro" />
 

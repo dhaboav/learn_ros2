@@ -4,7 +4,6 @@ from setuptools import find_packages, setup
 
 package_name = "learn_ros"
 launch_files = glob.glob("launch/*.py")
-xacro_files = glob.glob("description/urdf/*.xacro")
 
 
 setup(
@@ -15,7 +14,6 @@ setup(
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
         ("share/" + package_name + "/launch/", launch_files),
-        ("share/" + package_name + "/description/urdf/", xacro_files),
     ],
     install_requires=["setuptools"],
     zip_safe=True,
@@ -30,10 +28,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            f"turtle_act_server = {package_name}.turtle_act_server:main",
-            f"turtle_act_client = {package_name}.turtle_act_client:main",
-            f"turtle_math = {package_name}.turtle_math:main",
-            f"turtle_service = {package_name}.turtle_service:main",
+            f"lidar_control = {package_name}.lidar_control:main",
         ],
     },
 )
