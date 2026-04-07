@@ -18,53 +18,57 @@ class LidarControl(Node):
         self._cmd_vel_pubs = self.create_publisher(Twist, "/cmd_vel", 10)
         self.get_logger().info("Lidar Control has been started")
 
+    def get_min(self, data_slice: list):
+        sorted_data = sorted(data_slice)
+        return sorted_data[min(5, len(sorted_data) - 1)]
+
     def lidar_callback(self, sensor_data: LaserScan):
-
-        SAFE_DIST = 1.5
+        clean_data = []
         CRITICAL_DIST = 0.8
+        SAFE_DIST = 1.5
 
-        zones = [12.0] * 8
+        # Filtered the data
+        for val in sensor_data.ranges:
+            if (
+                math.isinf(val)
+                or math.isnan(val)
+                or val < sensor_data.range_min
+                or val > sensor_data.range_max
+            ):
+                clean_data.append(sensor_data.range_max)
+            else:
+                clean_data.append(val)
 
-        for i in range(360):
-            val = sensor_data.ranges[i]
+        # Navigation
+        angle_45_rad = math.pi / 4
+        step = int(angle_45_rad / sensor_data.angle_increment)
+        center = len(clean_data) // 2
 
-            # 1. Filtering the data
-            if math.isinf(val) or math.isnan(val) or val < 0.4:
-                val = 12.0
+        front_side = clean_data[center - step : center + step]
+        left_side = clean_data[center + step : center + 3 * step]
+        right_side = clean_data[center - 3 * step : center - step]
 
-            # 2. mapping by 45 degrees
-            zone_idx = i // 45
-
-            # 3. Minimum for each zone
-            if val < zones[zone_idx]:
-                zones[zone_idx] = val
-
-        # Navigation logic
-        front_dist = min(zones[3], zones[4])
-        left_dist = zones[5]
-        right_dist = zones[2]
+        dist_front = self.get_min(front_side)
+        dist_left = self.get_min(left_side)
+        dist_right = self.get_min(right_side)
 
         self.get_logger().info(
-            f"L: {left_dist:.2f} | F: {front_dist:.2f} | R: {right_dist:.2f}"
+            f"L: {dist_left:.2f} | F: {dist_front:.2f} | R: {dist_right:.2f}"
         )
 
-        if front_dist < CRITICAL_DIST:
-            self.get_logger().info("Danger: There object in front!")
-            self.move_robot(0.0, 0.0)
-
-            if left_dist > right_dist:
+        if dist_front < CRITICAL_DIST:
+            if dist_left > dist_right:
+                turn = 0.5
                 self.get_logger().info("Turn left")
-                self.move_robot(0.0, 0.5)
             else:
+                turn = -0.5
                 self.get_logger().info("Turn right")
-                self.move_robot(0.0, -0.5)
 
-        elif front_dist < SAFE_DIST:
+            self.move_robot(0.0, turn)
+
+        elif dist_front < SAFE_DIST:
             self.get_logger().info("Beware: There an object...")
-            if left_dist > right_dist:
-                self.move_robot(0.5, 0.3)
-            else:
-                self.move_robot(0.5, -0.3)
+            self.move_robot(0.5, 0.0)
 
         else:
             self.get_logger().info("Nothing in our way! Full Drive!")
