@@ -28,6 +28,8 @@ setup(
     },
     entry_points={
         "console_scripts": [
+            f"camera = {package_name}.camera:main",
+            f"test={package_name}.test:main",
             f"lidar_control = {package_name}.lidar_control:main",
         ],
     },

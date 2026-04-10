@@ -34,3 +34,6 @@ pip-delete-this-directory.txt
 # Manifest files (usually generated automatically)
 *.manifest
 *.spec
+
+# file
+learn_ros/learn_ros/test.py

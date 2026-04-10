@@ -7,8 +7,9 @@ Panels:
         - /Global Options1
         - /RobotModel1/Mass Properties1
         - /TF1
+        - /Image1
       Splitter Ratio: 0.8605769276618958
-    Tree Height: 270
+    Tree Height: 452
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
@@ -190,26 +191,20 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
-    - Class: rviz_default_plugins/Camera
+    - Class: rviz_default_plugins/Image
       Enabled: true
-      Far Plane Distance: 100
-      Image Rendering: background and overlay
-      Name: Camera
-      Overlay Alpha: 0.5
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /camera/image_raw/compressed
+        Value: /camera/process_image/compressed
       Value: true
-      Visibility:
-        Grid: true
-        LaserScan: true
-        RobotModel: true
-        TF: true
-        Value: true
-      Zoom Factor: 1
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -232,32 +227,32 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.2983010411262512
-        Y: -0.8313945531845093
-        Z: 0.44784367084503174
+        X: 0.13725842535495758
+        Y: -0.8601462244987488
+        Z: 0.49482446908950806
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.09479605406522751
+      Pitch: 0.18479599058628082
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.916371822357178
+      Yaw: 4.111372470855713
     Saved: ~
 Window Geometry:
-  Camera:
-    collapsed: false
   Displays:
     collapsed: false
-  Height: 749
+  Height: 1011
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000300000000000001560000024dfc0200000003fc0000003f00000194000000cc00fffffffa000000010100000002fb0000000800540069006d00650000000000ffffffff0000026f00fffffffb000000100044006900730070006c00610079007301000000000000026f0000015600fffffffb0000000c00430061006d0065007200610100000270000000c10000000000000000fb0000000c00430061006d00650072006101000001d9000000b30000001700ffffff000000010000010000000353fc0200000001fb0000000a00560069006500770073000000003f00000353000000a900ffffff00000003000003a30000003cfc0100000001fb0000000800540069006d00650100000000000003a30000026f00ffffff000002470000024d00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Image:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd00000003000000000000015600000353fc0200000004fc0000003f0000024a000000cc00fffffffa000000010100000002fb0000000800540069006d00650000000000ffffffff0000026f00fffffffb000000100044006900730070006c00610079007301000000000000026f0000015600fffffffb0000000c00430061006d00650072006100000001d0000000bc0000000000000000fb0000000c00430061006d00650072006101000001d9000000b30000000000000000fb0000000a0049006d006100670065010000028f000001030000001700ffffff000000010000010000000353fc0200000001fb0000000a00560069006500770073000000003f00000353000000a900ffffff00000003000007800000003cfc0100000001fb0000000800540069006d00650100000000000007800000026f00ffffff000006240000035300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Time:
     collapsed: false
   Views:
     collapsed: false
-  Width: 931
-  X: 672
-  Y: 166
+  Width: 1920
+  X: 0
+  Y: 32
